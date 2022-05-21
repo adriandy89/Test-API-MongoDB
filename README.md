@@ -1,8 +1,8 @@
-# Aprendiendo a crear apis en GO con base de datos mongodb
+# API en GO con base de datos mongodb
 
 
 ### Dependencias necesarias
-Dependencias que utilizaremos a lo largo del curso
+Dependencias que utilizaremos:
 
 - go get go.mongodb.org/mongo-driver/mongo
 
