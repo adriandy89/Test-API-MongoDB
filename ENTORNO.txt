@@ -1,0 +1,44 @@
+go env
+Focus on GOARCH and GOOS
+GOARCH=YOUR TARGET CPU
+GOOS=YOUR OS
+For my current Go environment, I wil get “.exe” as a compiled package
+go build
+To build to different target across platform, You will need to change “GOOS” and “GOARCH” using this command
+$env:GOOS = "linux"
+Then, check again
+go env
+
+From now your package will be building for linux.
+go build
+
+---------------Linux
+
+1. Write / Clone and Build our Go program
+First we need to have our Go program ready. We could write or clone it from Git repository. For example, it could be a Go package or Go module. The most important part in this step is to create the binary file to be ready for execution by systemd. We could do this by first change the directory to where we have our main.go file (or any directory where we have the go program that we want to run with systemd) and running this command on the terminal
+go build
+If it succeed a new binary file will be created and it will be named the same as the directory name.
+2. Create System Service file
+Next, let’s create a service file for the systemd. This service file serves as a guidance that tells systemd about the location of the execution file, user, and other required configuration. To do this, using nano (or vim whichever you prefer) we create a goapp.service through the command below.
+nano /lib/systemd/system/goapp.service
+and within the goapp.service, lets write the configuration that we want to use for our go program. we could use the code below for it.
+[Unit]
+Description=simple go application
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=5s
+ExecStart=/path/to/binary/file
+
+[Install]
+WantedBy=multi-user.target
+The code snippet above contains basic information about: the description of our service; how to handle for the server restart; and the most-important-part, the execution path (written as “ExecStart”). This is the path to locate our built binary file. The path should end with the name of the binary file and not only the directory where we put it. For example, supposed we have the binary file named goapp in the goapp directory within the home folder. In that case the path should be “/home/goapp/goapp”.
+3. Start the service with system service command
+Finally, we could start or go app service with this command
+service goapp start
+we could restart, enable the service to be run when the user logged in, and see the status of the service with these commands sequentially
+service goapp restart
+service goapp enable
+service goapp status
+Notice that the name of the service that we call is the same with the service file name that we created before. So that is how we call our service in the terminal.
