@@ -49,9 +49,9 @@ func validateToken(token string) (bool, string, error) {
 	tkn, err := jwt.ParseWithClaims(cleanToken, claims, func(token *jwt.Token) (interface{}, error) {
 		return myKey, nil
 	})
-	if err == nil && claims.Username == "SA" {
+	if err == nil && claims.Username == "SA@test.com" {
 		return true, claims.Rol, nil
-	} else if err == nil && claims.Username != "SA" {
+	} else if err == nil && claims.Username != "SA@test.com" {
 		founded := userservice.ValidateIfUserExistByUsername(claims.Username)
 		return founded, claims.Rol, nil
 	}
