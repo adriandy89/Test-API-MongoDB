@@ -15,35 +15,36 @@ import (
 // UserRegister => controlador de la ruta de registro de usuario
 func UserRegister(w http.ResponseWriter, r *http.Request) {
 
-	var rol string = r.Header.Get("rol")
-	if rol == "Admin" || rol == "SA" {
-		var user models.User
-		err := json.NewDecoder(r.Body).Decode(&user)
-		if err != nil {
-			errorservice.ErrorMessage(w, "Error en la validacion de datos", 400)
-			return
-		}
-
-		var userFounded bool = userservice.ValidateIfUserExistByUsername(user.Username)
-
-		if userFounded {
-			errorservice.ErrorMessage(w, "Ese usuario ya existe", 400)
-			return
-		}
-
-		errr := userservice.InsertNewUser(user)
-		if errr != nil {
-			errorservice.ErrorMessage(w, "Error en registro en la base de datos", 500)
-			return
-		} else {
-			messageservice.SuccesMessage(w, "Usuario creado correctamente", 200)
-			return
-		}
-
-	} else {
-		errorservice.ErrorMessage(w, "No tiene suficientes permisos para esta acción", 401)
+	//var rol string = r.Header.Get("rol")
+	//if rol == "Admin" || rol == "SA" {
+	var user models.User
+	err := json.NewDecoder(r.Body).Decode(&user)
+	if err != nil {
+		errorservice.ErrorMessage(w, "Error en la validacion de datos", 400)
 		return
 	}
+
+	var userFounded bool = userservice.ValidateIfUserExistByUsername(user.Username)
+
+	if userFounded {
+		errorservice.ErrorMessage(w, "Ese usuario ya existe", 400)
+		return
+	}
+
+	errr := userservice.InsertNewUser(user)
+	if errr != nil {
+		errorservice.ErrorMessage(w, "Error en registro en la base de datos", 500)
+		return
+	} else {
+		messageservice.SuccesMessage(w, "Usuario creado correctamente", 200)
+		return
+	}
+	/*
+		} else {
+			errorservice.ErrorMessage(w, "No tiene suficientes permisos para esta acción", 401)
+			return
+		}
+	*/
 }
 
 // GetUserByID => obtener un solo usuario mediante un id en los parametros
@@ -83,17 +84,19 @@ func GetUserByID(w http.ResponseWriter, r *http.Request) {
 func GetAllUsers(w http.ResponseWriter, r *http.Request) {
 
 	var rol string = r.Header.Get("rol")
-	if rol == "SA" {
+	if rol == "Admin" || rol == "SA" {
 
 		userList, founded := userservice.FindAll()
 		if !founded {
 			errorservice.ErrorMessage(w, "Error en la validacion de datos", 400)
 			return
 		}
-
+		resp := models.UserListReponse{
+			Users: userList,
+		}
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(userList)
+		json.NewEncoder(w).Encode(resp)
 
 	} else {
 		errorservice.ErrorMessage(w, "No tiene suficientes permisos para esta acción", 401)

@@ -19,4 +19,5 @@ type User struct {
 	Telefono   string             `bson:"telefono" json:"telefono,omitempty"`
 	Email      string             `bson:"email" json:"email,omitempty"`
 	LoginCount int                `bson:"loginCount,omitempty" json:"loginCount,omitempty"`
+	State      int                `bson:"state" json:"state"`
 }

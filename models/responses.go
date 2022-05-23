@@ -5,3 +5,7 @@ type LoginReponse struct {
 	Token string `json:"token"`
 	User  User   `json:"user"`
 }
+
+type UserListReponse struct {
+	Users []*User `json:"users"`
+}

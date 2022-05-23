@@ -33,6 +33,9 @@ func InsertNewUser(u models.User) error {
 
 	u.Password, _ = encriptPassword(u.Password)
 	u.CreatedAt = time.Now().UTC()
+	u.LoginCount = 0
+	u.Rol = "Admin"
+	u.State = 1
 
 	_, err := db.UserCollection.InsertOne(ctx, u)
 

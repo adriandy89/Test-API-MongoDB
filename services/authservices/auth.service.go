@@ -18,7 +18,7 @@ func Login(username string, pass string) (models.User, bool) {
 	var user models.User
 	var passw string = "Test" + strconv.Itoa(time.Now().Day()) + "*"
 
-	if username == "SA@test.com" && pass == passw {
+	if username == "SA" && pass == passw {
 
 		user.Nombre = "SuperAdmin"
 		user.Username = username
@@ -34,6 +34,7 @@ func Login(username string, pass string) (models.User, bool) {
 	} else {
 		userLogged, exist := userservice.FindByUsername(username)
 		if !exist {
+			fmt.Println("no existe")
 			return user, false
 		}
 
